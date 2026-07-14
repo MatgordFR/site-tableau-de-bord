@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MatgordCRM — démo (CRM + MRR)</title>
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Démo de CRM avec suivi du MRR — clients, deals, revenus récurrents. Projet vitrine par MatgordFR. Données fictives.">
+<style>
+:root{
+  --bg:#0c0e15; --panel:#141726; --panel2:#1a1e30; --card:#171b2b; --line:#262b3d;
+  --muted:#8b92a9; --dim:#5f6580; --text:#e9ebf4; --white:#fff;
+  --accent:#6d6bff; --accent-soft:rgba(109,107,255,.14);
+  --up:#25d0a3; --up-soft:rgba(37,208,163,.14); --down:#ff5d7a; --down-soft:rgba(255,93,122,.14);
+  --r:14px; --sb:248px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums}
+
+.app{display:grid;grid-template-columns:var(--sb) 1fr;min-height:100vh}
+
+/* ---- sidebar ---- */
+.sb{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:20px 14px;position:sticky;top:0;height:100vh}
+.logo{display:flex;align-items:center;gap:10px;padding:6px 8px 22px;font-weight:700;font-size:16px;letter-spacing:-.02em}
+.logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#a06bff);
+  display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:0 6px 20px -6px var(--accent)}
+.logo small{color:var(--accent);font-weight:600}
+.nav{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.nav button{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;color:var(--muted);font-weight:500;width:100%;text-align:left;transition:.12s}
+.nav button:hover{background:var(--panel2);color:var(--text)}
+.nav button.on{background:var(--accent-soft);color:var(--text)}
+.nav button.on svg{color:var(--accent)}
+.nav svg{width:18px;height:18px;flex:0 0 auto;color:var(--dim)}
+.sb .spacer{flex:1}
+.me{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:var(--panel2);border:1px solid var(--line)}
+.me .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#6d6bff,#22d0a3);display:grid;place-items:center;font-weight:700;color:#fff;flex:0 0 auto}
+.me b{display:block;font-size:13px}
+.me span{color:var(--dim);font-size:12px}
+
+/* ---- main ---- */
+.main{min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 28px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(12,14,21,.82);backdrop-filter:blur(10px);z-index:5}
+.top h1{margin:0;font-size:19px;letter-spacing:-.02em}
+.top .sub{color:var(--dim);font-size:12.5px;margin-top:2px}
+.demo-badge{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;letter-spacing:.02em;
+  color:#ffd27a;background:rgba(255,193,86,.1);border:1px solid rgba(255,193,86,.28);padding:5px 11px;border-radius:999px}
+.demo-badge .d{width:6px;height:6px;border-radius:50%;background:#ffc156}
+.content{padding:24px 28px 60px}
+.view{display:none}
+.view.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---- kpi ---- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.kpi .lbl{color:var(--muted);font-size:12.5px;font-weight:500;display:flex;align-items:center;gap:8px}
+.kpi .val{font-size:27px;font-weight:700;letter-spacing:-.02em;margin:8px 0 6px}
+.kpi .delta{font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:7px}
+.delta.up{color:var(--up);background:var(--up-soft)} .delta.down{color:var(--down);background:var(--down-soft)}
+.delta .arw{font-size:11px}
+
+/* ---- panels ---- */
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card h3{margin:0 0 2px;font-size:14.5px}
+.card .cap{color:var(--dim);font-size:12px;margin-bottom:16px}
+.chart-legend{display:flex;gap:16px;color:var(--muted);font-size:12px;margin-bottom:6px}
+.chart-legend .dot{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
+
+.tl{display:flex;flex-direction:column;gap:14px}
+.tl .row{display:flex;gap:11px;align-items:flex-start}
+.tl .ic{width:30px;height:30px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;background:var(--panel2);font-size:14px}
+.tl .row b{font-weight:600} .tl .row .t{color:var(--dim);font-size:12px}
+
+.rank .r{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.rank .r:last-child{border-bottom:0}
+.rank .av{width:32px;height:32px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;font-weight:700;color:#fff;font-size:13px}
+.rank .r .mrr{margin-left:auto;font-weight:700}
+.rank .r .plan{color:var(--dim);font-size:12px}
+
+/* ---- table ---- */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;background:var(--panel)}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--panel2)}
+.cli{display:flex;align-items:center;gap:11px}
+.cli .av{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;color:#fff;font-size:12px;flex:0 0 auto}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
+.pill.act{color:var(--up);background:var(--up-soft)} .pill.pause{color:#ffc156;background:rgba(255,193,86,.12)} .pill.churn{color:var(--down);background:var(--down-soft)}
+td .mono{font-variant-numeric:tabular-nums;font-weight:600}
+
+/* ---- kanban ---- */
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.col{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px;min-height:120px}
+.col h4{margin:0 0 12px;font-size:13px;display:flex;align-items:center;justify-content:space-between;color:var(--muted)}
+.col h4 .n{background:var(--panel2);border-radius:7px;padding:1px 8px;font-size:12px}
+.deal{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:10px;cursor:default;transition:.12s}
+.deal:hover{transform:translateY(-2px);border-color:var(--accent)}
+.deal .cli{margin-bottom:8px} .deal .cli .av{width:26px;height:26px;border-radius:7px}
+.deal .v{font-weight:700;font-size:15px} .deal .d{color:var(--dim);font-size:12px}
+
+/* ---- bars ---- */
+.bars{display:flex;flex-direction:column;gap:12px}
+.bar{display:grid;grid-template-columns:130px 1fr 70px;gap:12px;align-items:center;font-size:13px}
+.bar .track{height:12px;background:var(--panel2);border-radius:6px;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),#a06bff)}
+.bar .amt{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+
+.settings-note{color:var(--muted);max-width:520px}
+.foot{color:var(--dim);font-size:12px;margin-top:34px;padding-top:18px;border-top:1px solid var(--line)}
+
+.backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:39}
+.menu-btn{display:none}
+@media (max-width:1080px){ .kpis{grid-template-columns:repeat(2,1fr)} .grid2{grid-template-columns:1fr} .kanban{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  .sb{position:fixed;left:0;top:0;bottom:0;width:250px;z-index:40;transform:translateX(-100%);transition:transform .2s}
+  .sb.open{transform:none}
+  .menu-btn{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--panel2);border:1px solid var(--line)}
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:39;display:none} .backdrop.on{display:block}
+  .content{padding:18px 16px 50px} .top{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sb" id="sb">
+    <div class="logo"><span class="mark">M</span> Matgord<small>CRM</small></div>
+    <nav class="nav" id="nav">
+      <button data-v="dash" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg> Tableau de bord</button>
+      <button data-v="clients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3 3 0 0 1 0 5.6M17 19a5.5 5.5 0 0 0-2-4.3"/></svg> Clients</button>
+      <button data-v="deals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="4.5" height="16" rx="1.2"/><rect x="9.7" y="4" width="4.5" height="11" rx="1.2"/><rect x="16.4" y="4" width="4.5" height="8" rx="1.2"/></svg> Deals</button>
+      <button data-v="revenue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l5-5 3 3 6-7"/><path d="M17 8h3v3"/></svg> Revenus</button>
+      <button data-v="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg> Paramètres</button>
+    </nav>
+    <div class="spacer"></div>
+    <div class="me"><span class="av">M</span><div><b>Matéo</b><span>MatgordFR · agence</span></div></div>
+  </aside>
+  <div class="backdrop" id="bd"></div>
+
+  <main class="main">
+    <header class="top">
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="menu-btn" id="menuBtn" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <div><h1 id="ptitle">Tableau de bord</h1><div class="sub" id="psub">Vue d'ensemble de tes revenus récurrents</div></div>
+      </div>
+      <span class="demo-badge"><span class="d"></span> Démo · données fictives</span>
+    </header>
+    <div class="content">
+      <section class="view on" id="v-dash"></section>
+      <section class="view" id="v-clients"></section>
+      <section class="view" id="v-deals"></section>
+      <section class="view" id="v-revenue"></section>
+      <section class="view" id="v-settings"></section>
+      <div class="foot">MatgordCRM — projet démo par <b>MatgordFR</b> · matgord.com · toutes les données sont fictives.</div>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var euro = function(n){ return n.toLocaleString("fr-FR") + " €"; };
+  var initials = function(s){ return s.replace(/[^A-Za-zÀ-ÿ ]/g,"").split(/\s+/).filter(Boolean).slice(0,2).map(function(w){return w[0];}).join("").toUpperCase(); };
+  var hue = function(s){ var h=0; for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%360; return h; };
+  var avatar = function(name){ var h=hue(name); return '<span class="av" style="background:linear-gradient(135deg,hsl('+h+' 70% 55%),hsl('+((h+40)%360)+' 70% 48%))">'+initials(name)+'</span>'; };
+
+  // ---- données fictives ----
+  var months = ["août","sept","oct","nov","déc","janv","févr","mars","avr","mai","juin","juil"];
+  var mrrSeries = [420,470,540,600,690,760,880,980,1120,1270,1430,1610];
+  var newSeries = [60,50,80,70,110,90,150,140,170,180,180,210];
+  var churnSeries = [10,0,20,10,20,20,30,40,30,30,20,30];
+
+  var clients = [
+    { n:"Studio Nova",       plan:"Studio",   mrr:290, st:"act",   since:"mars 2026" },
+    { n:"Serveur GameFR",    plan:"Custom",   mrr:120, st:"act",   since:"janv 2026" },
+    { n:"Agence Pixel",      plan:"Studio",   mrr:240, st:"act",   since:"févr 2026" },
+    { n:"Boulangerie Léon",  plan:"Site",     mrr:60,  st:"act",   since:"avr 2026" },
+    { n:"TechStart",         plan:"Custom",   mrr:180, st:"act",   since:"déc 2025" },
+    { n:"Café des Arts",     plan:"Site",     mrr:45,  st:"pause", since:"mai 2026" },
+    { n:"Kalvyx",            plan:"Interne",  mrr:0,   st:"act",   since:"2026" },
+    { n:"DDL Community",     plan:"Custom",   mrr:150, st:"act",   since:"nov 2025" },
+    { n:"Léa Photographe",   plan:"Site",     mrr:35,  st:"act",   since:"juin 2026" },
+    { n:"OldServ",           plan:"Custom",   mrr:0,   st:"churn", since:"2025" },
+    { n:"Maison Verte",      plan:"Studio",   mrr:260, st:"act",   since:"mars 2026" }
+  ];
+  var deals = [
+    { c:"Resto Le Comptoir", v:900,  d:"Site + bot résa", s:"lead" },
+    { c:"Twitch — Korven",   v:150,  d:"Bot custom /mois", s:"lead" },
+    { c:"Agence Pixel",      v:290,  d:"Upsell Studio",    s:"talk" },
+    { c:"GuildeMMO",         v:180,  d:"Bot Discord /mois",s:"talk" },
+    { c:"Maison Verte",      v:260,  d:"Studio annuel",    s:"won" },
+    { c:"TechStart",         v:180,  d:"Renouvellement",   s:"won" },
+    { c:"OldServ",           v:120,  d:"Pas donné suite",  s:"lost" }
+  ];
+  var plans = [ {n:"Studio",v:1050}, {n:"Custom",v:630}, {n:"Site",v:140} ];
+
+  var stLabel = { act:"Actif", pause:"En pause", churn:"Parti" };
+
+  // ---- helpers charts ----
+  function areaChart(vals, w, h, pad){
+    pad = pad||{t:14,r:8,b:24,l:8};
+    var iw=w-pad.l-pad.r, ih=h-pad.t-pad.b, max=Math.max.apply(null,vals)*1.12, min=0;
+    var x=function(i){ return pad.l + (i/(vals.length-1))*iw; };
+    var y=function(v){ return pad.t + ih - ((v-min)/(max-min))*ih; };
+    var line="", area="";
+    vals.forEach(function(v,i){ var px=x(i).toFixed(1), py=y(v).toFixed(1); line+=(i?"L":"M")+px+" "+py+" "; });
+    area = line + "L"+x(vals.length-1).toFixed(1)+" "+(pad.t+ih)+" L"+x(0).toFixed(1)+" "+(pad.t+ih)+" Z";
+    var grid=""; for(var g=0;g<=3;g++){ var gy=(pad.t+ (ih/3)*g).toFixed(1); grid+='<line x1="'+pad.l+'" y1="'+gy+'" x2="'+(w-pad.r)+'" y2="'+gy+'" stroke="var(--line)" stroke-width="1"/>'; }
+    var dots=vals.map(function(v,i){ return '<circle cx="'+x(i).toFixed(1)+'" cy="'+y(v).toFixed(1)+'" r="'+(i===vals.length-1?4:2.5)+'" fill="var(--accent)"/>'; }).join("");
+    var labs=months.map(function(m,i){ return (i%2===0||i===months.length-1)?'<text x="'+x(i).toFixed(1)+'" y="'+(h-7)+'" fill="var(--dim)" font-size="10" text-anchor="middle">'+m+'</text>':''; }).join("");
+    return '<svg viewBox="0 0 '+w+' '+h+'" width="100%" preserveAspectRatio="none" style="display:block">'
+      +'<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>'
+      +grid+'<path d="'+area+'" fill="url(#ag)"/><path d="'+line+'" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'+dots+labs+'</svg>';
+  }
+
+  // ---- computed KPIs ----
+  var mrr = mrrSeries[mrrSeries.length-1], prev = mrrSeries[mrrSeries.length-2];
+  var mrrDelta = ((mrr-prev)/prev*100);
+  var arr = mrr*12;
+  var actifs = clients.filter(function(c){return c.st==="act" && c.mrr>0;}).length;
+  var churnRate = 2.1, netNew = newSeries[newSeries.length-1]-churnSeries[churnSeries.length-1];
+
+  function delta(p, invert){ var up = invert ? p<0 : p>=0; var v=Math.abs(p).toFixed(1).replace(".",","); return '<span class="delta '+(up?"up":"down")+'"><span class="arw">'+(up?"▲":"▼")+'</span>'+v+' %</span>'; }
+
+  // ---- views ----
+  function kpi(lbl,val,d){ return '<div class="kpi"><div class="lbl">'+lbl+'</div><div class="val num">'+val+'</div>'+d+'</div>'; }
+
+  function viewDash(){
+    var top = clients.filter(function(c){return c.mrr>0;}).sort(function(a,b){return b.mrr-a.mrr;}).slice(0,5);
+    var acts = [
+      {i:"🟢",b:"Maison Verte a signé",t:"Studio annuel · +260 €/mois · il y a 2 j"},
+      {i:"⬆️",b:"Agence Pixel — upsell",t:"passée en Studio · +120 €/mois · il y a 4 j"},
+      {i:"🆕",b:"Léa Photographe",t:"nouveau client Site · +35 €/mois · il y a 6 j"},
+      {i:"🔴",b:"OldServ a résilié",t:"Custom · -120 €/mois · la semaine dernière"}
+    ];
+    return ''
+    +'<div class="kpis">'
+      +kpi("MRR (revenu mensuel)", euro(mrr), delta(mrrDelta))
+      +kpi("ARR (annualisé)", euro(arr), delta(mrrDelta))
+      +kpi("Clients actifs", actifs, '<span class="delta up"><span class="arw">▲</span>2</span>')
+      +kpi("Taux de churn", churnRate.toString().replace(".",",")+" %", delta(-0.4,true))
+    +'</div>'
+    +'<div class="grid2">'
+      +'<div class="card"><h3>Évolution du MRR</h3><div class="cap">12 derniers mois · net +'+euro(netNew)+' ce mois</div>'
+        +'<div class="chart-legend"><span><span class="dot" style="background:var(--accent)"></span>MRR / mois</span></div>'
+        +areaChart(mrrSeries, 640, 240)+'</div>'
+      +'<div class="card"><h3>Top clients</h3><div class="cap">par MRR</div><div class="rank">'
+        + top.map(function(c){ return '<div class="r">'+avatar(c.n)+'<div><div><b>'+c.n+'</b></div><div class="plan">'+c.plan+'</div></div><div class="mrr num">'+euro(c.mrr)+'</div></div>'; }).join("")
+        +'</div></div>'
+    +'</div>'
+    +'<div class="grid2" style="margin-top:16px">'
+      +'<div class="card"><h3>MRR par offre</h3><div class="cap">répartition du revenu récurrent</div>'+barsHtml()+'</div>'
+      +'<div class="card"><h3>Activité récente</h3><div class="cap">derniers mouvements</div><div class="tl">'
+        + acts.map(function(a){ return '<div class="row"><div class="ic">'+a.i+'</div><div><b>'+a.b+'</b><div class="t">'+a.t+'</div></div></div>'; }).join("")
+        +'</div></div>'
+    +'</div>';
+  }
+
+  function barsHtml(){
+    var max=Math.max.apply(null,plans.map(function(p){return p.v;}));
+    return '<div class="bars">'+plans.map(function(p){
+      return '<div class="bar"><div>'+p.n+'</div><div class="track"><div class="fill" style="width:'+(p.v/max*100).toFixed(0)+'%"></div></div><div class="amt num">'+euro(p.v)+'</div></div>';
+    }).join("")+'</div>';
+  }
+
+  function viewClients(){
+    var rows = clients.map(function(c){
+      return '<tr><td><div class="cli">'+avatar(c.n)+'<b>'+c.n+'</b></div></td>'
+        +'<td>'+c.plan+'</td>'
+        +'<td class="mono">'+(c.mrr?euro(c.mrr)+" /mois":"—")+'</td>'
+        +'<td><span class="pill '+c.st+'">'+stLabel[c.st]+'</span></td>'
+        +'<td style="color:var(--dim)">'+c.since+'</td></tr>';
+    }).join("");
+    return '<div class="tablewrap"><table><thead><tr><th>Client</th><th>Offre</th><th>MRR</th><th>Statut</th><th>Client depuis</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  }
+
+  function viewDeals(){
+    var cols = [ {k:"lead",t:"Nouveau lead"}, {k:"talk",t:"En discussion"}, {k:"won",t:"Gagné"}, {k:"lost",t:"Perdu"} ];
+    return '<div class="kanban">'+cols.map(function(col){
+      var ds = deals.filter(function(d){return d.s===col.k;});
+      return '<div class="col"><h4>'+col.t+'<span class="n">'+ds.length+'</span></h4>'
+        + ds.map(function(d){ return '<div class="deal"><div class="cli">'+avatar(d.c)+'<b>'+d.c+'</b></div><div class="v num">'+euro(d.v)+'</div><div class="d">'+d.d+'</div></div>'; }).join("")
+        +'</div>';
+    }).join("")+'</div>';
+  }
+
+  function viewRevenue(){
+    return '<div class="kpis" style="grid-template-columns:repeat(3,1fr)">'
+      +kpi("Nouveau MRR (ce mois)", "+"+euro(newSeries[11]), '<span class="delta up"><span class="arw">▲</span>nouveaux + upsell</span>')
+      +kpi("MRR perdu (churn)", "-"+euro(churnSeries[11]), '<span class="delta down"><span class="arw">▼</span>1 résiliation</span>')
+      +kpi("MRR net", "+"+euro(netNew), delta(mrrDelta))
+    +'</div>'
+    +'<div class="card" style="margin-bottom:16px"><h3>MRR par offre</h3><div class="cap">d\'où vient le revenu récurrent</div>'+barsHtml()+'</div>'
+    +'<div class="card"><h3>Mouvements de MRR (12 mois)</h3><div class="cap">nouveau vs churn, chaque mois</div>'+movementChart()+'</div>';
+  }
+  function movementChart(){
+    var w=760,h=200,pad=40,bw=w/12*0.5, max=Math.max.apply(null,newSeries);
+    var bars=""; for(var i=0;i<12;i++){
+      var cx=(i+0.5)*(w/12);
+      var nh=(newSeries[i]/max)*(h-pad-20), ch=(churnSeries[i]/max)*(h-pad-20);
+      bars+='<rect x="'+(cx-bw/2-1).toFixed(1)+'" y="'+(h-pad-nh).toFixed(1)+'" width="'+(bw/2).toFixed(1)+'" height="'+nh.toFixed(1)+'" rx="2" fill="var(--up)"/>';
+      bars+='<rect x="'+(cx+1).toFixed(1)+'" y="'+(h-pad-ch).toFixed(1)+'" width="'+(bw/2).toFixed(1)+'" height="'+Math.max(ch,1).toFixed(1)+'" rx="2" fill="var(--down)"/>';
+      if(i%2===0) bars+='<text x="'+cx.toFixed(1)+'" y="'+(h-pad+16)+'" fill="var(--dim)" font-size="10" text-anchor="middle">'+months[i]+'</text>';
+    }
+    return '<div class="chart-legend"><span><span class="dot" style="background:var(--up)"></span>nouveau MRR</span><span><span class="dot" style="background:var(--down)"></span>churn</span></div>'
+      +'<svg viewBox="0 0 '+w+' '+h+'" width="100%" style="display:block">'+bars+'</svg>';
+  }
+
+  function viewSettings(){
+    return '<div class="card"><h3>Paramètres</h3><div class="cap">démo — non fonctionnel</div>'
+      +'<p class="settings-note">Dans la vraie appli : ton profil d\'agence, tes offres et leurs prix, la connexion à ta facturation (Stripe), les rappels de relance, et l\'export comptable. Ici c\'est une <b>vitrine</b> : le code, l\'UI et la data model sont réels, le back-office est simulé.</p></div>';
+  }
+
+  var VIEWS = { dash:{f:viewDash,t:"Tableau de bord",s:"Vue d'ensemble de tes revenus récurrents"},
+    clients:{f:viewClients,t:"Clients",s:clients.length+" clients · "+actifs+" actifs"},
+    deals:{f:viewDeals,t:"Deals",s:"ton pipeline commercial"},
+    revenue:{f:viewRevenue,t:"Revenus",s:"nouveau MRR, churn, par offre"},
+    settings:{f:viewSettings,t:"Paramètres",s:"configuration (démo)"} };
+  var rendered = {};
+  function show(v){
+    var cfg=VIEWS[v]; if(!cfg) return;
+    if(!rendered[v]){ document.getElementById("v-"+v).innerHTML = cfg.f(); rendered[v]=true; }
+    document.querySelectorAll(".view").forEach(function(s){ s.classList.remove("on"); });
+    document.getElementById("v-"+v).classList.add("on");
+    document.querySelectorAll("#nav button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-v")===v); });
+    document.getElementById("ptitle").textContent=cfg.t; document.getElementById("psub").textContent=cfg.s;
+    closeSb();
+  }
+  document.getElementById("nav").addEventListener("click", function(e){ var b=e.target.closest("button[data-v]"); if(b) show(b.getAttribute("data-v")); });
+
+  // mobile sidebar
+  var sb=document.getElementById("sb"), bd=document.getElementById("bd");
+  function closeSb(){ sb.classList.remove("open"); bd.classList.remove("on"); }
+  document.getElementById("menuBtn").addEventListener("click", function(){ sb.classList.add("open"); bd.classList.add("on"); });
+  bd.addEventListener("click", closeSb);
+
+  show("dash");
+})();
+</script>
+</body>
+</html>
