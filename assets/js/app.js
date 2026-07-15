@@ -246,9 +246,9 @@
       return '<div class="bar-line"><span class="muted">' + o.offer + '</span><span class="bar-track"><span class="bar-fill" data-w="' + w + '"></span></span><span class="val num">' + val + '</span></div>';
     }).join("");
   }
-  function clientRow(c) { return '<div class="row" data-id="' + c.id + '"><span class="chip" style="background:' + c.color + '">' + c.initials + '</span><span class="who"><b>' + c.name + '</b><small>' + c.offer + '</small></span><span class="amt num">' + eur(c.mrr) + '</span></div>'; }
+  function clientRow(c) { return '<div class="row" role="button" tabindex="0" data-id="' + c.id + '"><span class="chip" style="background:' + c.color + '">' + c.initials + '</span><span class="who"><b>' + c.name + '</b><small>' + c.offer + '</small></span><span class="amt num">' + eur(c.mrr) + '</span></div>'; }
   function clientTr(c) {
-    return '<tr data-id="' + c.id + '" data-name="' + c.name.toLowerCase() + '" data-offer="' + c.offer.toLowerCase() + '">' +
+    return '<tr role="button" tabindex="0" data-id="' + c.id + '" data-name="' + c.name.toLowerCase() + '" data-offer="' + c.offer.toLowerCase() + '">' +
       '<td><span class="chip" style="display:inline-grid;vertical-align:middle;background:' + c.color + '">' + c.initials + '</span> ' + c.name + '</td>' +
       '<td><span class="tag-offer">' + c.offer + '</span></td><td class="right num">' + eur(c.mrr) + '</td>' +
       '<td>' + (c.status === "résilié" ? "—" : anciennete(c.sinceMonths)) + '</td>' +
@@ -256,7 +256,7 @@
   }
   function th(label, key, right) {
     var on = sort.key === key;
-    return '<th class="sortable' + (right ? " right" : "") + (on ? " sorted" : "") + '" data-key="' + key + '">' + label + ' <span class="arrow">' + (on ? (sort.dir === "asc" ? "▲" : "▼") : "▲") + '</span></th>';
+    return '<th class="sortable' + (right ? " right" : "") + (on ? " sorted" : "") + '" role="button" tabindex="0" data-key="' + key + '">' + label + ' <span class="arrow">' + (on ? (sort.dir === "asc" ? "▲" : "▼") : "▲") + '</span></th>';
   }
   function sortRows(rows) {
     var k = sort.key, dir = sort.dir === "asc" ? 1 : -1;
@@ -264,10 +264,16 @@
   }
 
   /* ---------- Interactions ---------- */
-  function wireClientRows(root) { if (root) root.querySelectorAll("[data-id]").forEach(function (el) { el.addEventListener("click", function () { openClient(el.getAttribute("data-id")); }); }); }
+  function onActivate(el, fn) {
+    el.addEventListener("click", fn);
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") { e.preventDefault(); fn(); }
+    });
+  }
+  function wireClientRows(root) { if (root) root.querySelectorAll("[data-id]").forEach(function (el) { onActivate(el, function () { openClient(el.getAttribute("data-id")); }); }); }
   function wireSort() {
     byId("view-clients").querySelectorAll("th.sortable").forEach(function (h) {
-      h.addEventListener("click", function () {
+      onActivate(h, function () {
         var k = h.getAttribute("data-key");
         if (sort.key === k) sort.dir = sort.dir === "asc" ? "desc" : "asc";
         else { sort.key = k; sort.dir = (k === "mrr" || k === "sinceMonths") ? "desc" : "asc"; }
@@ -299,6 +305,7 @@
       '</div><div class="px-label">Note</div><div class="px-note">' + c.note + '</div>';
     byId("panel").classList.add("open"); byId("panel").setAttribute("aria-hidden", "false"); byId("backdrop").classList.add("open");
     byId("pxClose").addEventListener("click", closeClient);
+    try { byId("pxClose").focus(); } catch (e) {}
   }
   function closeClient() { byId("panel").classList.remove("open"); byId("panel").setAttribute("aria-hidden", "true"); byId("backdrop").classList.remove("open"); }
 
