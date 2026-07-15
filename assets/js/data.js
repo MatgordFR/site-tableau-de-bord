@@ -1,4 +1,4 @@
-/* MatgordCRM — démo · données 100% FICTIVES (source unique).
+/* Essor — démo · données 100% FICTIVES (source unique).
    Rien ici n'est réel : clients, revenus et deals sont inventés pour la vitrine.
    Choix : on stocke des FAITS ATOMIQUES ; les KPIs (MRR, ARR, churn, courbe) sont
    DÉRIVÉS dans app.js → tout reste cohérent (les offres somment au MRR, la courbe
@@ -7,7 +7,7 @@ window.CRM = window.CRM || {};
 
 CRM.data = {
   meta: {
-    product: "MatgordCRM",
+    product: "Essor",
     author: "MatgordFR",
     site: "matgord.com",
     currency: "€",

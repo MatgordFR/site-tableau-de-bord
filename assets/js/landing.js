@@ -1,4 +1,4 @@
-/* MatgordCRM — présentation : thème, reveals au scroll, compteurs animés. Vanilla. */
+/* Essor — présentation : thème, reveals au scroll, compteurs animés. Vanilla. */
 (function () {
   "use strict";
   var byId = function (id) { return document.getElementById(id); };

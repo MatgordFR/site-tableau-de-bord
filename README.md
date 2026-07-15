@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📊 MatgordCRM
+# 📊 Essor
 
 ### Un CRM avec de **vraies analytics de MRR** — 100 % vanilla, zéro dépendance.
 

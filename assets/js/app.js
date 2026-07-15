@@ -1,4 +1,4 @@
-/* MatgordCRM — logique & vues. Vanilla, aucune dépendance.
+/* Essor — logique & vues. Vanilla, aucune dépendance.
    Sécurité : tout le HTML injecté vient de data.js (données fictives maîtrisées).
    La saisie de recherche n'est JAMAIS interpolée dans du HTML — elle filtre
    seulement des lignes déjà rendues (voir applyQuery). */

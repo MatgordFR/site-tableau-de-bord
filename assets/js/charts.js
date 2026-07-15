@@ -1,4 +1,4 @@
-/* MatgordCRM — graphiques dessinés à la main en SVG (aucune librairie).
+/* Essor — graphiques dessinés à la main en SVG (aucune librairie).
    Chaque fonction renvoie une chaîne SVG ; les couleurs viennent du CSS
    (classes .chart-*) → s'adaptent au thème clair/sombre tout seul. */
 window.CRM = window.CRM || {};
