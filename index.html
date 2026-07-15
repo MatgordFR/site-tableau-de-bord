@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-src 'none'; img-src 'self' data:; font-src 'self'; style-src 'self'; script-src 'self'; connect-src 'none'">
   <title>Essor — CRM + suivi du MRR (démo)</title>
   <meta name="description" content="Démo d'un CRM avec analytics de MRR : clients, pipeline, waterfall, ARPU/LTV/Quick Ratio/NRR, projection. Zéro dépendance, vanilla, par MatgordFR.">
   <meta name="robots" content="index,follow">
@@ -10,6 +11,16 @@
   <meta property="og:title" content="Essor — CRM + suivi du MRR (démo)">
   <meta property="og:description" content="CRM de démo avec de vraies analytics de MRR. Zéro dépendance, tout en vanilla.">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Essor">
+  <meta property="og:url" content="https://matgordfr.github.io/site-tableau-de-bord/">
+  <meta property="og:image" content="https://matgordfr.github.io/site-tableau-de-bord/preview.jpg">
+  <meta property="og:image:width" content="1560">
+  <meta property="og:image:height" content="975">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Essor — CRM + suivi du MRR (démo)">
+  <meta name="twitter:description" content="CRM de démo avec de vraies analytics de MRR. Zéro dépendance, tout en vanilla.">
+  <meta name="twitter:image" content="https://matgordfr.github.io/site-tableau-de-bord/preview.jpg">
+  <meta name="referrer" content="no-referrer">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/landing.css">
 </head>
@@ -32,13 +43,13 @@
       <div>
         <div class="hero-eyebrow">démo · CRM + suivi du MRR</div>
         <h1 class="hero-title">
-          <span class="word" style="animation-delay:.05s">Le</span>
-          <span class="word" style="animation-delay:.10s">revenu</span>
-          <span class="word" style="animation-delay:.15s">récurrent,</span><br>
-          <span class="word accent" style="animation-delay:.26s">lisible</span>
-          <span class="word accent" style="animation-delay:.31s">d'un</span>
-          <span class="word accent" style="animation-delay:.36s">coup</span>
-          <span class="word accent" style="animation-delay:.41s">d'œil.</span>
+          <span class="word w1">Le</span>
+          <span class="word w2">revenu</span>
+          <span class="word w3">récurrent,</span><br>
+          <span class="word accent w4">lisible</span>
+          <span class="word accent w5">d'un</span>
+          <span class="word accent w6">coup</span>
+          <span class="word accent w7">d'œil.</span>
         </h1>
         <p class="hero-sub">Un CRM de démonstration : clients, pipeline, et de vraies analytics de MRR — waterfall, ARPU, LTV, churn, projection. Zéro dépendance, tout dessiné à la main en vanilla.</p>
         <div class="hero-cta">
@@ -75,7 +86,7 @@
         <div class="feature reveal d2"><div class="f-ic"><svg viewBox="0 0 20 20"><rect x="2.5" y="4" width="3.6" height="12" rx="1"/><rect x="8.2" y="4" width="3.6" height="8.5" rx="1"/><rect x="13.9" y="4" width="3.6" height="10.5" rx="1"/></svg></div><h3>Deals</h3><p>Pipeline en kanban, du premier lead jusqu'au deal gagné ou perdu.</p></div>
         <div class="feature reveal"><div class="f-ic"><svg viewBox="0 0 20 20"><line x1="3" y1="16.5" x2="17.5" y2="16.5"/><rect x="4" y="10" width="2.6" height="6.5"/><rect x="8.3" y="6" width="2.6" height="10.5"/><rect x="12.6" y="12.5" width="2.6" height="4"/></svg></div><h3>Revenus</h3><p>MRR décomposé, waterfall new/expansion/contraction/churn, métriques SaaS.</p></div>
         <div class="feature reveal d1"><div class="f-ic"><svg viewBox="0 0 20 20"><polyline points="3,14 8,9.5 11.5,11.5 17,5"/><polyline points="12.5,5 17,5 17,9.5"/></svg></div><h3>Prévisions</h3><p>Projection du MRR sur 6 mois selon la tendance, hypothèses affichées.</p></div>
-        <div class="feature reveal d2"><div class="f-ic"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5 a6.5 6.5 0 0 0 0 13 z" style="fill:currentColor;stroke:none"/></svg></div><h3>Thèmes & détails</h3><p>Clair et sombre, animations, responsive, accessible au clavier.</p></div>
+        <div class="feature reveal d2"><div class="f-ic"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="6.5"/><path class="ic-fill" d="M10 3.5 a6.5 6.5 0 0 0 0 13 z"/></svg></div><h3>Thèmes & détails</h3><p>Clair et sombre, animations, responsive, accessible au clavier.</p></div>
       </div>
     </section>
 

@@ -28,6 +28,13 @@
 .hero-title { font-family: var(--font-display); font-weight: 600; font-size: clamp(38px, 5.4vw, 60px); line-height: 1.04; letter-spacing: -.02em; }
 .hero-title .accent { color: var(--accent); font-style: italic; }
 .hero-title .word { display: inline-block; opacity: 0; transform: translateY(14px); animation: word .7s cubic-bezier(.2,.7,.2,1) forwards; }
+.hero-title .word.w1 { animation-delay: .05s; }
+.hero-title .word.w2 { animation-delay: .10s; }
+.hero-title .word.w3 { animation-delay: .15s; }
+.hero-title .word.w4 { animation-delay: .26s; }
+.hero-title .word.w5 { animation-delay: .31s; }
+.hero-title .word.w6 { animation-delay: .36s; }
+.hero-title .word.w7 { animation-delay: .41s; }
 .hero-sub { color: var(--ink-soft); font-size: 18px; line-height: 1.55; margin: 22px 0 30px; max-width: 33em; opacity: 0; animation: word .7s ease .5s forwards; }
 .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; opacity: 0; animation: word .7s ease .62s forwards; }
 .hero-note { margin-top: 18px; color: var(--muted); font-size: 13px; opacity: 0; animation: word .7s ease .74s forwards; }
@@ -99,6 +106,7 @@
 
 /* ---------- Icônes SVG (line) ---------- */
 .f-ic svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.f-ic svg .ic-fill { fill: currentColor; stroke: none; }
 
 /* ---------- Micro-interactions ---------- */
 .feature { position: relative; overflow: hidden; transition: transform .22s cubic-bezier(.2,.7,.2,1), border-color .22s, box-shadow .22s; }
